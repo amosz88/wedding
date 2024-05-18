@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding RSVP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f8ff;
+        }
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .counter button {
+            padding: 10px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+        .counter input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wedding Invitation</h1>
+        <p>We are excited to invite you to our wedding. Please RSVP below:</p>
+        <form id="rsvpForm">
+            <input type="text" id="firstName" name="firstName" placeholder="First Name" required>
+            <input type="text" id="lastName" name="lastName" placeholder="Last Name" required>
+            <select id="attendance" name="attendance" required>
+                <option value="" disabled selected>Will you be attending?</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+            <div class="counter">
+                <button type="button" onclick="decrement()">-</button>
+                <input type="text" id="guests" name="guests" value="0" readonly>
+                <button type="button" onclick="increment()">+</button>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        let guestCount = 0;
+
+        function increment() {
+            if (guestCount < 2) {
+                guestCount++;
+                document.getElementById('guests').value = guestCount;
+            }
+        }
+
+        function decrement() {
+            if (guestCount > 0) {
+                guestCount--;
+                document.getElementById('guests').value = guestCount;
+            }
+        }
+
+        document.getElementById('rsvpForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const attendance = document.getElementById('attendance').value;
+            const guests = document.getElementById('guests').value;
+            
+            fetch('https://script.google.com/macros/s/AKfycbyErLZTa1QE8JYz0SO1wzYfA-mb4o6fzHjWd4FqkgHKk578lMMba2ST34Zbcd367_RwcQ/execT_URL', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ firstName, lastName, attendance, guests }),
+})
+.then(response => response.json())
+.then(data => {
+    if (data.result === "success") {
+        alert(`Thank you for your response, ${firstName} ${lastName}!`);
+    } else {
+        alert('There was an error submitting your response. Please try again.');
+    }
+})
+.catch((error) => {
+    console.error('Error:', error);
+    alert('There was an error submitting your response. Please try again.');
+});
+
+            
+            alert(`Thank you for your response, ${firstName} ${lastName}!`);
+        });
+    </script>
+</body>
+</html>
